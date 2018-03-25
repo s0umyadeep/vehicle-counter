@@ -1,8 +1,8 @@
-package com.survey.vehicle.handler;
+package com.survey.vehicle.presenter;
 
 import com.survey.vehicle.model.Direction;
 import com.survey.vehicle.model.Vehicle;
-import com.survey.vehicle.presenter.VehicleCountPresenter;
+import com.survey.vehicle.presenter.CarDistancePresenter;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,13 +12,13 @@ import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 
-public class VehicleCountPresenterTest {
+public class CarDistancePresenterTest {
     @Test
-    public void testVehicleCountIsCalculatedCorrectly() throws Exception {
-        VehicleCountPresenter vehicleCountPresenter = new VehicleCountPresenter();
+    public void testCarDistanceIsCalculatedCorrectly() throws Exception {
+        CarDistancePresenter carDistancePresenter = new CarDistancePresenter();
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream();
              PrintStream out = new PrintStream(stream);) {
-            vehicleCountPresenter.setOut(out);
+            carDistancePresenter.setOut(out);
 
             List<Vehicle> vehicles = new LinkedList<>();
             Vehicle v1 = new Vehicle();
@@ -53,20 +53,20 @@ public class VehicleCountPresenterTest {
             v4.setBackAxleTime(7200500);
             vehicles.add(v4);
 
-            vehicleCountPresenter.present(vehicles, false);
+            carDistancePresenter.present(vehicles, false);
             String message = new String(stream.toByteArray());
-            Assert.assertTrue(message.contains("period: 12\t count: 3"));
-
+            Assert.assertTrue(message.contains("period = 12, distance = 0.005"));
+            Assert.assertTrue(message.contains("period = 1, distance = 0.0"));
 
         }
     }
 
     @Test
-    public void testAverageVehicleCountIsCalculatedCorrectly() throws Exception {
-        VehicleCountPresenter vehicleCountPresenter = new VehicleCountPresenter();
+    public void testAverageCarDistanceIsCalculatedCorrectly() throws Exception {
+        CarDistancePresenter carDistancePresenter = new CarDistancePresenter();
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream();
              PrintStream out = new PrintStream(stream);) {
-            vehicleCountPresenter.setOut(out);
+            carDistancePresenter.setOut(out);
 
             List<Vehicle> vehicles = new LinkedList<>();
             Vehicle v1 = new Vehicle();
@@ -101,38 +101,36 @@ public class VehicleCountPresenterTest {
             v4.setBackAxleTime(8201600);
             vehicles.add(v4);
 
-            vehicleCountPresenter.present(vehicles, true);
+            carDistancePresenter.present(vehicles, true);
             String message = new String(stream.toByteArray());
-            Assert.assertTrue(message.contains("period: 12\t count: 0.6"));
+            Assert.assertTrue(message.contains("period: 12\t distance: 1.0003"));
         }
     }
 
     @Test
     public void testEmptyVehicleListIsHandled() throws Exception {
-        VehicleCountPresenter vehicleCountPresenter = new VehicleCountPresenter();
+        CarDistancePresenter carDistancePresenter = new CarDistancePresenter();
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream();
              PrintStream out = new PrintStream(stream);) {
-            vehicleCountPresenter.setOut(out);
-            vehicleCountPresenter.present(new LinkedList<>(), true);
+            carDistancePresenter.setOut(out);
+            carDistancePresenter.present(new LinkedList<>(), true);
             String message = new String(stream.toByteArray());
 
             Assert.assertTrue(message.contains("NORTH_BOUND"));
             Assert.assertTrue(message.contains("SOUTH_BOUND"));
             Assert.assertTrue(message.contains("No cars went to this direction"));
-
         }
     }
 
     @Test
     public void testNullVehicleListIsHandled() throws Exception {
-        VehicleCountPresenter vehicleCountPresenter = new VehicleCountPresenter();
+        CarDistancePresenter carDistancePresenter = new CarDistancePresenter();
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream();
              PrintStream out = new PrintStream(stream);) {
-            vehicleCountPresenter.setOut(out);
-            vehicleCountPresenter.present(null, true);
+            carDistancePresenter.setOut(out);
+            carDistancePresenter.present(null, true);
             Assert.assertTrue(new String(stream.toByteArray()).contains("No cars went to any direction"));
         }
 
     }
-
 }

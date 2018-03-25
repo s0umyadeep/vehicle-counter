@@ -1,8 +1,8 @@
-package com.survey.vehicle.handler;
+package com.survey.vehicle.presenter;
 
 import com.survey.vehicle.model.Direction;
 import com.survey.vehicle.model.Vehicle;
-import com.survey.vehicle.presenter.SpeedDistributionPresenter;
+import com.survey.vehicle.presenter.VehicleCountPresenter;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,14 +12,13 @@ import java.io.PrintStream;
 import java.util.LinkedList;
 import java.util.List;
 
-public class SpeedDistributionPresenterTest {
-    
+public class VehicleCountPresenterTest {
     @Test
-    public void testSpeedDistributionIsCalculatedCorrectly() throws Exception {
-        SpeedDistributionPresenter speedDistributionPresenter = new SpeedDistributionPresenter();
+    public void testVehicleCountIsCalculatedCorrectly() throws Exception {
+        VehicleCountPresenter vehicleCountPresenter = new VehicleCountPresenter();
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream();
              PrintStream out = new PrintStream(stream);) {
-            speedDistributionPresenter.setOut(out);
+            vehicleCountPresenter.setOut(out);
 
             List<Vehicle> vehicles = new LinkedList<>();
             Vehicle v1 = new Vehicle();
@@ -54,20 +53,20 @@ public class SpeedDistributionPresenterTest {
             v4.setBackAxleTime(7200500);
             vehicles.add(v4);
 
-            speedDistributionPresenter.present(vehicles, false);
+            vehicleCountPresenter.present(vehicles, false);
             String message = new String(stream.toByteArray());
-            Assert.assertTrue(message.contains("period: 12\t speed: 90.0"));
+            Assert.assertTrue(message.contains("period: 12\t count: 3"));
 
 
         }
     }
 
     @Test
-    public void testAverageSpeedDistributionIsCalculatedCorrectly() throws Exception {
-        SpeedDistributionPresenter speedDistributionPresenter = new SpeedDistributionPresenter();
+    public void testAverageVehicleCountIsCalculatedCorrectly() throws Exception {
+        VehicleCountPresenter vehicleCountPresenter = new VehicleCountPresenter();
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream();
              PrintStream out = new PrintStream(stream);) {
-            speedDistributionPresenter.setOut(out);
+            vehicleCountPresenter.setOut(out);
 
             List<Vehicle> vehicles = new LinkedList<>();
             Vehicle v1 = new Vehicle();
@@ -102,37 +101,38 @@ public class SpeedDistributionPresenterTest {
             v4.setBackAxleTime(8201600);
             vehicles.add(v4);
 
-            speedDistributionPresenter.present(vehicles, true);
+            vehicleCountPresenter.present(vehicles, true);
             String message = new String(stream.toByteArray());
-            Assert.assertTrue(message.contains("period: 12\t speed: 24.3"));
+            Assert.assertTrue(message.contains("period: 12\t count: 0.6"));
         }
     }
 
     @Test
     public void testEmptyVehicleListIsHandled() throws Exception {
-        SpeedDistributionPresenter speedDistributionPresenter = new SpeedDistributionPresenter();
+        VehicleCountPresenter vehicleCountPresenter = new VehicleCountPresenter();
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream();
              PrintStream out = new PrintStream(stream);) {
-            speedDistributionPresenter.setOut(out);
-            speedDistributionPresenter.present(new LinkedList<>(), true);
+            vehicleCountPresenter.setOut(out);
+            vehicleCountPresenter.present(new LinkedList<>(), true);
             String message = new String(stream.toByteArray());
 
             Assert.assertTrue(message.contains("NORTH_BOUND"));
             Assert.assertTrue(message.contains("SOUTH_BOUND"));
             Assert.assertTrue(message.contains("No cars went to this direction"));
+
         }
     }
 
     @Test
     public void testNullVehicleListIsHandled() throws Exception {
-        SpeedDistributionPresenter speedDistributionPresenter = new SpeedDistributionPresenter();
+        VehicleCountPresenter vehicleCountPresenter = new VehicleCountPresenter();
         try (ByteArrayOutputStream stream = new ByteArrayOutputStream();
              PrintStream out = new PrintStream(stream);) {
-            speedDistributionPresenter.setOut(out);
-            speedDistributionPresenter.present(null, true);
-            Assert.assertTrue(new String(stream.toByteArray()).contains("No cars went to this direction"));
-
+            vehicleCountPresenter.setOut(out);
+            vehicleCountPresenter.present(null, true);
+            Assert.assertTrue(new String(stream.toByteArray()).contains("No cars went to any direction"));
         }
 
     }
+
 }
