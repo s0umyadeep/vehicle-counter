@@ -1,13 +1,16 @@
 package com.survey.vehicle;
 
-import com.survey.vehicle.handler.*;
-import com.survey.vehicle.model.Vehicle;
-import com.survey.vehicle.parser.DataParser;
-import com.survey.vehicle.parser.Parser;
-
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.survey.vehicle.model.Vehicle;
+import com.survey.vehicle.parser.Parser;
+import com.survey.vehicle.presenter.CarDistancePresenter;
+import com.survey.vehicle.presenter.PeakVolumeTimesPresenter;
+import com.survey.vehicle.presenter.Presenter;
+import com.survey.vehicle.presenter.SpeedDistributionPresenter;
+import com.survey.vehicle.presenter.VehicleCountPresenter;
 
 public class VehicleSurvey {
 
@@ -48,12 +51,12 @@ public class VehicleSurvey {
     }
 
     public Collection<Presenter> configurePresenters() {
-        Collection<Presenter> analysers = new LinkedList<>();
-        analysers.add(new VehicleCountPresenter());
-        analysers.add(new SpeedDistributionPresenter());
-        analysers.add(new PeakVolumeTimesPresenter());
-        analysers.add(new CarDistancePresenter());
-        return analysers;
+        Collection<Presenter> localPresenters = new LinkedList<>();
+        localPresenters.add(new VehicleCountPresenter());
+        localPresenters.add(new SpeedDistributionPresenter());
+        localPresenters.add(new PeakVolumeTimesPresenter());
+        localPresenters.add(new CarDistancePresenter());
+        return localPresenters;
     }
 
 }

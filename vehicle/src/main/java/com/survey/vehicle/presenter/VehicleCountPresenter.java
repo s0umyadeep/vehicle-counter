@@ -1,4 +1,4 @@
-package com.survey.vehicle.handler;
+package com.survey.vehicle.presenter;
 
 import com.survey.vehicle.model.Direction;
 import com.survey.vehicle.model.Vehicle;
@@ -8,62 +8,46 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+public class VehicleCountPresenter extends AbstractPresenter {
 
-public class SpeedDistributionPresenter extends AbstractPresenter {
 
     public void showPerPeriod(Map<Integer, List<Vehicle>> vehiclesPerDay, Function<? super Vehicle, Boolean> filter,
                               Function<? super Vehicle, Integer> groupBy) {
+
         for (Integer key : vehiclesPerDay.keySet()) {
             getOut().println("day: " + getDayStr(key));
             List<Vehicle> vehicles = vehiclesPerDay.get(key);
-            Map<Integer, Double> vehiclesPerPeriod = vehicles.stream().filter(v -> filter.apply(v))
-                    .collect(Collectors.groupingBy(groupBy, Collectors.averagingDouble(
-                            v -> {
-
-                                long x = v.getBackAxleTime() - v.getFrontAxleTime();
-                                double y = ((2.5 / x) * oneHourMili) / 1000;
-                                return y;
-
-                            }
-                    )));
-
-            vehiclesPerPeriod.forEach((k, v) -> getOut().println("period: " + k + "\t speed: " + v));
+            Map<Integer, Long> vehicleCountPerPeriod =
+                    vehicles.stream().filter(v -> filter.apply(v)).collect(Collectors.groupingBy(groupBy,
+                            Collectors.counting()));
+            vehicleCountPerPeriod.forEach((k, v) -> getOut().println("period: " + k + "\t count: " + v));
         }
     }
 
-
     public void showAveragePerPeriod(List<Vehicle> vehicles, Function<? super Vehicle, Boolean> filter,
                                      Function<? super Vehicle, Integer> groupBy) {
-        Map<Integer, Map<Integer, Double>> map = vehicles.stream().filter(v -> filter.apply(v)).collect(Collectors
-                .groupingBy(groupBy, Collectors.groupingBy(Vehicle::getDay, Collectors.averagingDouble(
-                        v -> {
 
-                            long x = v.getBackAxleTime() - v.getFrontAxleTime();
-                            double y = ((2.5 / x) * oneHourMili) / 1000;
-                            return y;
-
-                        }
-                ))));
+        Map<Integer, Map<Integer, Long>> map = vehicles.stream().filter(v -> filter.apply(v))
+                .collect(Collectors.groupingBy(groupBy, Collectors.groupingBy(Vehicle::getDay, Collectors.counting())));
 
         int size = map.keySet().stream().reduce(Integer::max).orElse(0);
         int days = 5;
         for (int i = 1; i <= size; i++) {
             double count = 0;
-            for (int j = 0; j < days; j++) {
+            for (int j = 1; j <= days; j++) {
                 if (map.containsKey(i) && map.get(i).containsKey(j)) {
                     count += map.get(i).get(j);
                 }
             }
             double avg = count / days;
-            getOut().println("period: " + i + "\t speed: " + avg);
+            getOut().println("period: " + i + "\t count: " + avg);
         }
     }
-
 
     @Override
     public void present(List<Vehicle> vehicles, boolean average) {
         if (vehicles == null) {
-            getOut().println(" No cars went to this direction ");
+            getOut().println(" No cars went to any direction ");
         } else {
             Direction[] directions = new Direction[]{
                     Direction.NORTH_BOUND, Direction.SOUTH_BOUND
@@ -75,6 +59,7 @@ public class SpeedDistributionPresenter extends AbstractPresenter {
                         .filter(vehicle -> direction
                                 .equals(vehicle.getDirection())).collect(Collectors
                                 .groupingBy(Vehicle::getDay));
+
 
                 if (vehiclesPerDay.isEmpty()) {
                     getOut().println(" No cars went to this direction ");
@@ -101,8 +86,8 @@ public class SpeedDistributionPresenter extends AbstractPresenter {
                         showAveragePerPeriod(vehiclesPerDirection, v -> v.getFifteenMinsGroup() != 0,
                                 Vehicle::getFifteenMinsGroup);
                     }
-                }
 
+                }
             }
         }
     }

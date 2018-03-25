@@ -2,6 +2,8 @@ package com.survey.vehicle.handler;
 
 import com.survey.vehicle.model.Direction;
 import com.survey.vehicle.model.Vehicle;
+import com.survey.vehicle.presenter.VehicleCountPresenter;
+
 import org.junit.Assert;
 import org.junit.Test;
 

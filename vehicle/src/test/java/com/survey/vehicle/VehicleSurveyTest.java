@@ -1,9 +1,10 @@
 package com.survey.vehicle;
 
-import com.survey.vehicle.handler.Presenter;
 import com.survey.vehicle.model.Vehicle;
 import com.survey.vehicle.parser.DataParsingException;
 import com.survey.vehicle.parser.Parser;
+import com.survey.vehicle.presenter.Presenter;
+
 import org.junit.Assert;
 import org.junit.Test;
 
