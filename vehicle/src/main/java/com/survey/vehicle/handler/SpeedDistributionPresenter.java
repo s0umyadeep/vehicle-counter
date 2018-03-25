@@ -55,7 +55,7 @@ public class SpeedDistributionPresenter extends AbstractPresenter {
                 }
             }
             double avg = count / days;
-            getOut().println("period: " + i + "\t count: " + avg);
+            getOut().println("period: " + i + "\t speed: " + avg);
         }
     }
 

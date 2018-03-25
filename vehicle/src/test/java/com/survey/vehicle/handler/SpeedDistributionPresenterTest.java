@@ -102,7 +102,7 @@ public class SpeedDistributionPresenterTest {
 
             speedDistributionPresenter.present(vehicles, true);
             String message = new String(stream.toByteArray());
-            Assert.assertTrue(message.contains("period: 12\t count: 24.3"));
+            Assert.assertTrue(message.contains("period: 12\t speed: 24.3"));
         }
     }
 

@@ -53,8 +53,8 @@ public class CarDistancePresenterTest {
 
             carDistancePresenter.present(vehicles, false);
             String message = new String(stream.toByteArray());
-            Assert.assertTrue(message.contains("period = 12, value = 0.005"));
-            Assert.assertTrue(message.contains("period = 1, value = 0.0"));
+            Assert.assertTrue(message.contains("period = 12, distance = 0.005"));
+            Assert.assertTrue(message.contains("period = 1, distance = 0.0"));
 
         }
     }
@@ -101,7 +101,7 @@ public class CarDistancePresenterTest {
 
             carDistancePresenter.present(vehicles, true);
             String message = new String(stream.toByteArray());
-            Assert.assertTrue(message.contains("period: 12\t count: 1.0003"));
+            Assert.assertTrue(message.contains("period: 12\t distance: 1.0003"));
         }
     }
 

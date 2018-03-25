@@ -28,7 +28,7 @@ public class CarDistancePresenter extends AbstractPresenter {
             });
 
             avgSpeedPerPeriod.forEach((k, v) -> {
-                getOut().println("period = " + k + ", value = " + v);
+                getOut().println("period = " + k + ", distance = " + v);
             });
 
         }
@@ -52,7 +52,7 @@ public class CarDistancePresenter extends AbstractPresenter {
                 }
             }
             double avg = count / days;
-            getOut().println("period: " + i + "\t count: " + avg);
+            getOut().println("period: " + i + "\t distance: " + avg);
         }
     }
 
